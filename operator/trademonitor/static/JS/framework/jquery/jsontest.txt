@@ -1,0 +1,102 @@
+
+{
+  "Consumable": [
+    {
+      "SerialNum": "10298730489",
+      "Equipment": "TP-Link",
+      "ItemType": "Net",
+      "Location": "6F_A_1_4",
+      "Inventory": "30"
+    },
+    {
+      "SerialNum": "10298732442",
+      "Equipment": "DLink",
+      "ItemType": "Net",
+      "Location": "6F_A_1_5",
+      "Inventory": "50"
+    },
+    {
+      "SerialNum": "1023242489",
+      "Equipment": "HP HQ-TRE",
+      "ItemType": "HW",
+      "Location": "6F_B_1_4",
+      "Inventory": "30"
+    }
+  ],
+  "Pending": [
+    {
+      "RequestID": "1000003",
+      "Enviroment": "TM500-300062",
+      "ItemType":"Cloud Service",
+      "Project": "China Mobile",
+      "Owner": "Leo Liu",
+      "StartTime": "2014-10-10 12:00",
+      "EndTime": "2014-12-10 12:00",
+      "Status": "2",
+      "StatusName":"Owner Approved",
+      "Comments":"I approved it."
+    },
+    {
+      "RequestID": "1000002",
+      "Enviroment": "TM500-300222",
+      "ItemType":"Cloud Service",
+      "Project": "China Mobile",
+      "Owner": "Leo Liu",
+      "StartTime": "2014-10-10 12:00",
+      "EndTime": "2014-12-10 12:00",
+      "Status": "2",
+      "StatusName":"Owner Approved",
+      "Comments":"I approved it."
+    },
+    {
+      "RequestID": "1000001",
+      "Enviroment": "TM500-300332",
+      "ItemType":"Cloud Service",
+      "Project": "China Unicom",
+      "Owner": "Leo Liu",
+      "StartTime": "2014-10-10 12:00",
+      "EndTime": "2014-12-10 12:00",
+      "Status": "2",
+      "StatusName":"Owner Approved",
+      "Comments":"I approved it."
+    }
+  ],
+  "Final": [
+    {
+      "RequestID": "1000006",
+      "Enviroment": "TM500-300062",
+      "ItemType":"Cloud Service",
+      "Project": "China Mobile",
+      "Owner": "Leo Liu",
+      "StartTime": "2014-10-10 12:00",
+      "EndTime": "2014-12-10 12:00",
+      "Status": "3",
+      "StatusName":"Inactive",
+      "Comments":"User ID: 61471200\nUser Name: Jin, Xin\nTeam: RMA."
+    },
+    {
+      "RequestID": "1000005",
+      "Enviroment": "TM500-300222",
+      "ItemType":"Cloud Service",
+      "Project": "China Mobile",
+      "Owner": "Leo Liu",
+      "StartTime": "2014-10-10 12:00",
+      "EndTime": "2014-12-10 12:00",
+      "Status": "3",
+      "StatusName":"Inactive",
+       "Comments":"User ID: 61471200\nUser Name: Jin, Xin\nTeam: RMA."
+    },
+    {
+      "RequestID": "1000004",
+      "Enviroment": "TM500-300332",
+      "ItemType":"Cloud Service",
+      "Project": "China Unicom",
+      "Owner": "Leo Liu",
+      "StartTime": "2014-10-10 12:00",
+      "EndTime": "2014-12-10 12:00",
+      "Status": "4",
+      "StatusName":"Available",
+      "Comments":"I approved it."
+    }
+  ]
+}

@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="zh">
+<head>
+	<meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"> 
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Bootstrap隐藏滑动侧边栏jQuery插件|DEMO_jQuery之家-自由分享jQuery、html5、css3的插件库</title>
+	<!-- Bootstrap -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.rawgit.com/AndreaLombardo/BootSideMenu/master/css/BootSideMenu.css">
+	<link rel="stylesheet" type="text/css" href="css/default.css">
+	<!-- HTML5 shim e Respond.js per rendere compatibile l'HTML 5 in IE8 -->
+	  <!-- ATTENZIONE: Respond.js non funziona se la pagina viene visualizzata in locale file:// -->
+	  <!--[if lt IE 9]>
+	  <script src="http://cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.2/html5shiv-printshiv.min.js"></script>
+	  <script src="js/respond.min.js"></script>
+	  <![endif]-->
+	<style type="text/css">
+	  .user{
+	    padding:5px;
+	    margin-bottom: 5px;
+	  }
+	  a:hover{text-decoration: none;}
+	</style>
+</head>
+<body>
+	<!--Test -->
+	  <div id="test">
+	    <div class="user">
+	      <img src="img/face_japan_01.gif" alt="Esempio" class="img-thumbnail">
+	      <a href="http://www.htmleaf.com" target="_blank" class="navbar-link">jQuery之家</a>
+	    </div>
+	    <div class="list-group">
+	      <a href="#" class="list-group-item active">Cras justo odio</a>
+	      <a href="#" class="list-group-item">Dapibus ac facilisis in</a>
+	      <a href="#" class="list-group-item">Morbi leo risus</a>
+	      <a href="#" class="list-group-item">Morbi leo risus</a>
+	      <a href="#" class="list-group-item">Porta ac consectetur ac</a>
+	      <a href="#subTest" class="list-group-item">Sub menù test</a>
+	      <a href="#" class="list-group-item">Dapibus ac facilisis in</a>
+	      <a href="#" class="list-group-item">Morbi leo risus</a>
+	      <a href="#" class="list-group-item">Porta Porta Porta sdaf s fs hfuis uif ac consectetur ac</a>
+	      <a href="#" class="list-group-item">Vestibulum at eros</a>
+	      <a href="#" class="list-group-item">Dapibus ac facilisis in</a>
+	      <a href="#" class="list-group-item">Morbi leo risus</a>
+	      <a href="#" class="list-group-item">Porta ac consectetur ac</a>
+	    </div>
+
+	    <div class="list-group submenu" id="subTest">
+	      <a href="#" class="list-group-item">Morbi leo risus</a>
+	      <a href="#subTestSub" class="list-group-item">Sub di Sub</a>
+	      <a href="#" class="list-group-item">Porta ac consectetur ac</a>
+	    </div> 
+
+	    <div class="list-group submenu" id="subTestSub">
+	      <a href="#" class="list-group-item">Morbi leo risus</a>
+	      <a href="#" class="list-group-item">Porta ac consectetur ac</a>
+	    </div> 
+
+	  </div>
+	  <!--/Test -->
+
+	  <!--Test 2 -->
+	  <div id="test2">
+	    <div class="list-group">
+	      <a href="#" class="list-group-item active">Cras justo odio</a>
+	      <a href="#" class="list-group-item">Dapibus ac facilisis in</a>
+	      <a href="#" class="list-group-item">Morbi leo risus</a>
+	      <a href="#" class="list-group-item">Porta ac consectetur ac</a>
+	      <a href="#" class="list-group-item">Vestibulum at eros</a>
+	      <a href="#" class="list-group-item">Dapibus ac facilisis in</a>
+	      <a href="#" class="list-group-item">Morbi leo risus</a>
+	      <a href="#" class="list-group-item">Porta ac consectetur ac</a>
+	      <a href="#" class="list-group-item">Vestibulum at eros</a>
+	      <a href="#" class="list-group-item">Dapibus ac facilisis in</a>
+	      <a href="#" class="list-group-item">Morbi leo risus</a>
+	      <a href="#" class="list-group-item">Porta ac consectetur ac</a>
+	      <a href="#" class="list-group-item">Vestibulum at eros</a>
+	      <a href="#" class="list-group-item">Dapibus ac facilisis in</a>
+	      <a href="#" class="list-group-item">Morbi leo risus</a>
+	      <a href="#" class="list-group-item">Porta ac consectetur ac</a>
+	      <a href="#" class="list-group-item">Vestibulum at eros</a>
+	      <a href="#" class="list-group-item">Dapibus ac facilisis in</a>
+	      <a href="#" class="list-group-item">Morbi leo risus</a>
+	      <a href="#" class="list-group-item">Porta ac consectetur ac</a>
+	      <a href="#" class="list-group-item">Vestibulum at eros</a>
+	      <a href="#" class="list-group-item">Dapibus ac facilisis in</a>
+	      <a href="#" class="list-group-item">Morbi leo risus</a>
+	      <a href="#" class="list-group-item">Porta ac consectetur ac</a>
+	      <a href="#" class="list-group-item">Vestibulum at eros</a>
+	      <a href="#" class="list-group-item">Dapibus ac facilisis in</a>
+	      <a href="#" class="list-group-item">Morbi leo risus</a>
+	      <a href="#" class="list-group-item">Porta ac consectetur ac</a>
+	      <a href="#" class="list-group-item">Vestibulum at eros</a>
+	      <a href="#" class="list-group-item">Dapibus ac facilisis in</a>
+	      <a href="#" class="list-group-item">Morbi leo risus</a>
+	      <a href="#" class="list-group-item">Porta ac consectetur ac</a>
+	      <a href="#" class="list-group-item">Vestibulum at eros</a>
+	      <a href="#" class="list-group-item">Dapibus ac facilisis in</a>
+	      <a href="#" class="list-group-item">Morbi leo risus</a>
+	      <a href="#" class="list-group-item">Porta ac consectetur ac</a>
+	      <a href="#" class="list-group-item">Vestibulum at eros</a>
+	      <a href="#" class="list-group-item">Dapibus ac facilisis in</a>
+	      <a href="#" class="list-group-item">Morbi leo risus</a>
+	      <a href="#subRight" class="list-group-item">Sub Menu</a>
+	      <a href="#" class="list-group-item">Vestibulum at eros</a>
+	    </div>
+
+	    <div class="list-group submenu" id="subRight">
+	      <a href="#" class="list-group-item">a destra</a>
+	      <a href="#subRight2" class="list-group-item">Sub right 2</a>
+	    </div> 
+
+	        <div class="list-group submenu" id="subRight2">
+	      <a href="#" class="list-group-item">Porta ac consectetur ac</a>
+	      <a href="#" class="list-group-item">Vestibulum at eros</a>
+	      <a href="#" class="list-group-item">Dapibus ac facilisis in</a>
+	      <a href="#" class="list-group-item">Morbi leo risus</a>
+	      <a href="#" class="list-group-item">Porta ac consectetur ac</a>
+	      <a href="#" class="list-group-item">Vestibulum at eros</a>
+	    </div> 
+	  </div>
+	  <!--/Test 2-->
+	  <!--Normale contenuto di pagina-->
+	  <div class="container">
+	    <div class="row">
+	      <div class="col-md-12">
+	        <div class="jumbotron">
+	        	<header class="htmleaf-header">
+					<h1>Bootstrap隐藏滑动侧边栏jQuery插件 <span>A simple lightweight javascript plugin used to create side menus/panels</span></h1>
+					<div class="htmleaf-links">
+						<a class="htmleaf-icon icon-htmleaf-home-outline" href="http://www.htmleaf.com/" title="jQuery之家" target="_blank"><span> jQuery之家</span></a>
+						<a class="htmleaf-icon icon-htmleaf-arrow-forward-outline" href="http://www.htmleaf.com/jQuery/Menu-Navigation/201505131825.html" title="返回下载页" target="_blank"><span> 返回下载页</span></a>
+					</div>
+				</header>
+	        </div>
+	      </div>
+	    </div>
+
+	    <div class="row">
+	      <div class="col-md-4">
+	        <div class="panel panel-default">
+	          <div class="panel-heading">HTML</div>
+	          <div class="panel-body">
+	            codice html
+	          </div>
+	        </div>
+	      </div>
+	      <div class="col-md-4">
+	        <div class="panel panel-default">
+	          <div class="panel-heading">JavaScript</div>
+	          <div class="panel-body">
+	            codice JavaScript
+	          </div>
+	        </div>
+	      </div>
+	      <div class="col-md-4">
+	        <div class="panel panel-default">
+	          <div class="panel-heading">Call</div>
+	          <div class="panel-body">
+	            $('#test').BootSideMenu({side:"left", autoClose:true});
+	          </div>
+	        </div>
+	      </div>
+	    </div>
+
+	    <div class="row">
+	    	<div class="col-md-12">
+	    		<div class="related">
+				    <h3>如果你喜欢这个插件，那么你可能也喜欢:</h3>
+				    <a href="http://www.htmleaf.com/jQuery/Menu-Navigation/201505101809.html">
+					  <img src="related/1.jpg" width="300" alt="jQuery高仿真移动手机滑动侧边栏布局插件"/>
+					  <h3>jQuery高仿真移动手机滑动侧边栏布局插件</h3>
+					</a>
+					<a href="http://www.htmleaf.com/jQuery/Form/201505101807.html">
+					  <img src="related/2.jpg" width="300" alt="基于Bootstrap的强大jQuery表单验证插件"/>
+					  <h3>基于Bootstrap的强大jQuery表单验证插件</h3>
+					</a>
+				</div>
+	    	</div>
+	    </div>
+
+	  </div>
+	  <!--Normale contenuto di pagina-->
+	
+	<script src="http://libs.useso.com/js/jquery/1.11.0/jquery.min.js" type="text/javascript"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+    <script src="https://cdn.rawgit.com/AndreaLombardo/BootSideMenu/master/js/BootSideMenu.js"></script>
+    <script type="text/javascript">
+	  $(document).ready(function(){
+	      $('#test').BootSideMenu({side:"left", autoClose:false});
+	      $('#test2').BootSideMenu({side:"right"});
+	  });
+	</script>
+</body>
+</html>

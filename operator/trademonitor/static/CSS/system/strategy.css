@@ -1,0 +1,173 @@
+﻿@CHARSET "ISO-8859-1";
+
+.row-buffer {
+    margin-top:20px;
+    margin-bottom:20px;
+}
+
+.row-even {
+    background-color:#76A0D3;
+}
+.row-odd {
+    background-color:#BDE3FB;
+}
+
+#tb_one td,#tb_two td,#tb_three td,#tb_four td  {
+    background-color: #000;
+    color:#C0C0C0;
+    text-align : right;
+    font-size:14px;
+    padding: 4px 18px;
+}
+
+.highlight{
+    background-color: #410080;
+}
+
+.head{
+    background-color: #191919;
+    color:#C0C0C0;
+    font-size:12px;
+    font-weight: bold;
+    text-align : right;
+}
+
+.head_left{
+    background-color: #191919;
+    color:#C0C0C0;
+    font-size:12px;
+    font-weight: bold;
+    text-align : left;
+}
+
+table.dataTable.no-footer, .dataTables_scroll{
+    border:1px solid #292929;
+}
+
+.paging_simple_numbers a.paginate_button {
+    color: #000 !important;
+}
+.paging_simple_numbers a.paginate_active {
+    color: red !important;
+}
+
+.menu_img {
+    float:left;
+}
+
+.menu_font{
+    margin: 5px 10px 0px 5px;
+    font-size: 30px;
+    float: left;
+    color: #45A4CF;
+}
+
+.left{
+    float:left;
+}
+
+.text{
+    height: 38px;
+    font-weight: bolder;
+    font-size:12px;
+    color: #C0C0C0;
+    background-color: #191919;
+    border: 1px solid #292929;
+    text-align:center;
+}
+
+.text_1{
+    font-weight: bolder;
+    font-size:12px;
+    color: #C0C0C0;
+    padding-top:8px;
+    text-align:right;
+}
+
+.textbx{
+    background-color:#191919;
+    color:#ffffff;
+    border:1px solid #292929;
+}
+
+.icon{
+    right: 0px;
+    position: absolute;
+}
+
+.icon:hover{
+    color:#fff;
+    cursor : pointer;
+}
+
+.tableRistk{
+    float:left;
+}
+
+.font{
+    font-size:30px;
+    font-weight:bold;
+    padding:10px;
+}
+
+.font_edit{
+    font-size: 1.05em;
+    font-weight: bold;
+    margin-top: 10px;
+    padding: 10px;
+    color: #DDD666;
+}
+
+.leftAccount{
+      background-color: #292929;
+      color: #c0c0c0;
+}
+
+#lbAccount{
+     color: #DDD666;
+     float: left;
+     font-size:12px;
+     padding-top: 8px;
+}
+
+.bootAlert{
+	position:fixed;
+	top:0px;
+	width:100%;
+	z-index:999;
+	display:none;
+}
+
+.forTable{
+    margin-left:5px;
+}
+
+.line{
+  margin: 30px auto auto auto;
+  height: 2px;
+  border-bottom: 2px dotted #707070;
+  width: 100%;
+}
+.uploadButton{
+  border-radius: 20px;
+  width: 90px;
+  height: 30px;
+  float: left;
+  margin-left: 5px;
+}
+
+.accountRow{
+	margin:10px;
+}
+
+.configBox {
+    margin-top:5px;
+    background-color: #191919;
+    color: #ffffff;
+    border: 1px solid #292929;
+}
+
+.radioSpan {
+    color:#C0C0C0;
+    margin:0px 5px;
+}
