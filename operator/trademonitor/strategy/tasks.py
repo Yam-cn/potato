@@ -6,7 +6,7 @@ from celery.decorators import task
 #@shared_task
 @task()
 def runAlgo(algo_file, para):
-    a = open('/usr/lib/python2.7/site-packages/pyalgotrade-cn/stratlib/%s'%(algo_file,))
+    a = open('/opt/potato/stratlib/%s'%(algo_file,))
     lines = a.read()
     
     global para_list

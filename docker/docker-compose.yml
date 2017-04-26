@@ -1,0 +1,25 @@
+version: "2"
+
+services:
+    baso_os:
+        build:
+            context: ./base_os
+            dockerfile: Dockerfile
+        image: base_os:0.2
+    potato_suit:
+        restart: always
+        build:
+            context: ./
+            dockerfile: Dockerfile
+        image: potato:0.8
+        container_name: potato_suit
+        hostname: potato_suit
+        ports:
+            - 5555:5555
+            - 8088:8080
+            - 8888:8888
+            - 27017:27017
+        volumes:
+            - /home/work/project/potato/notebook:/notebook
+            - /home/work/project/potato/stratlib:/opt/stratlib
+            - /data/mongodb:/var/lib/mongodb
