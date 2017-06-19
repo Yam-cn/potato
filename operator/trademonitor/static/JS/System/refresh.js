@@ -17,12 +17,10 @@ function loadAccount(){
             if(typeof rdata === 'string')
                 rdata = JSON.parse(rdata);
             AccountList.length = 0;
-            AccountTimerList.length = 0;
             if(typeof rdata != 'undefined' && rdata.length > 0){
                 for(var i = 0; i < rdata.length; i++){
                     var oitem = rdata[i];
                     AccountList.push(oitem.account_id);
-                    AccountTimerList.push(getAccountTimer(oitem.account_id));
                 }
             }
             tb_one.clear().rows.add(rdata).draw();
@@ -49,12 +47,10 @@ function loadStrategy(){
             if(typeof rdata === 'string')
                 rdata = JSON.parse(rdata);
             StrategyList.length = 0;
-            StrategyTimerList.length = 0;
             if(typeof rdata != 'undefined' && rdata.length > 0){
                 for(var i = 0; i < rdata.length; i++){
                     var oitem = rdata[i];
                     StrategyList.push(oitem.strategy_id);
-                    StrategyTimerList.push(getStrategyTimer(oitem.strategy_id));
                 }
             }
             tb_two.clear().rows.add(rdata).draw();
@@ -85,189 +81,14 @@ function loadTradeDetail(){
         }
     });
 }
-//获取账户定时任务 传入账户ID参数
-function getAccountTimer(uuid){
-    return {
-        id: uuid,
-        enable: 1,
-        refreshhandler: function(){
-            var param = {
-                account_id : this.id
-            }
-            if(this.enable == 1){
-                $.ajax({
-                    url: "/queryAccount",
-                    dataType: "JSON",
-                    cache: false,
-                    type: 'GET',
-                    data: param,
-                    timeout: 5000,
-                    fail: function(e) {
-                        return;
-                    },
-                    error: function(e) {
-                        return;
-                    },
-                    success:function(rdata) {
-                        if(typeof rdata === 'string')
-                            rdata = JSON.parse(rdata);
-                        if(typeof rdata === "undefined" || rdata === null || rdata.length <= 0){
-                            return;
-                        }
-                        //取全部已显示的数据，遍历，找出和本次刷新的account_id相同的记录
-                        //然后把对应的新数据更新到这一行
-                        var tdata = tb_one.data();
-                        for(var i = 0; i < tdata.length; i++ ){
-                            if(param.account_id === tdata[i].account_id){
-                                var nodelist = $(tb_one.row(i).node()).children();
-                                nodelist[0].innerHTML = rdata[0].account_id;
-                                nodelist[1].innerHTML = rdata[0].account_type;
-                                nodelist[2].innerHTML = rdata[0].dyn_right;
-                                nodelist[3].innerHTML = rdata[0].cash_avalible;
-                                nodelist[4].innerHTML = rdata[0].cash_frozen;
-                                nodelist[5].innerHTML = rdata[0].asset;
-                                nodelist[6].innerHTML = rdata[0].date;
-                                break;
-                            }
-                        }
-                        return;
-                    }
-                });
-            }
-        }
-    };
-}
-//获取策略定时任务 传入策略ID参数
-function getStrategyTimer(uuid){
-    return {
-        id: uuid,
-        enable: 1,
-        refreshhandler: function(){
-            var self = this;
-            var param = {
-                strategy_id : this.id
-            }
-            if(this.enable == 1){
-                $.ajax({
-                    url: "/queryStrategy",
-                    dataType: "JSON",
-                    cache: false,
-                    type: 'GET',
-                    data: param,
-                    timeout: 5000,
-                    fail: function(e) {
-                        return;
-                    },
-                    error: function(e) {
-                        return;
-                    },
-                    success:function(rdata) {
-                        if(typeof rdata === 'string')
-                            rdata = JSON.parse(rdata);
-                        if(typeof rdata === "undefined" || rdata === null || rdata.length <= 0){
-                            return;
-                        }
-                        /*if(rdata.status === "Y"){
-                            self.enable = 1;
-                        }else{
-                            self.enable = 0;
-                        }*/
-                        //取全部已显示的数据，遍历，找出和本次刷新的account_id相同的记录
-                        //然后把对应的新数据更新到这一行
-                        var tdata = tb_two.data();
-                        for(var i = 0; i < tdata.length; i++ ){
-                            if(param.strategy_id === tdata[i].strategy_id){
-                                var nodelist = $(tb_two.row(i).node()).children();
-                                var shtml = '';
-                                if(ShowFlag_Tbtwo){
-                                    shtml += '<label style="color : #DDD666; float : left;">' + rdata[0].strategy_id + '</label>';
-                                    shtml += '<input type="hidden" value="'+ rdata[0].strategy_id +'" />'
-                                }else{
-                                    shtml += '<label style="color : #DDD666; float : left;">+</label>';
-                                    shtml += '<input type="hidden" value="'+ rdata[0].strategy_id +'" />'
-                                }
-                                nodelist[0].innerHTML = shtml;
-                                nodelist[1].innerHTML = rdata[0].strategy_name;
-                                nodelist[2].innerHTML = rdata[0].ticker;
-                                nodelist[3].innerHTML = rdata[0].position_lot;
-                                nodelist[4].innerHTML = rdata[0].strategy_profit;
-                                nodelist[5].innerHTML = rdata[0].position_profit;
-                                nodelist[6].innerHTML = rdata[0].args;
-                                nodelist[7].innerHTML = rdata[0].account_id;
-                                nodelist[8].innerHTML = rdata[0].filename;
-                                nodelist[9].innerHTML = rdata[0].status;
-                                nodelist[10].innerHTML = rdata[0].date;
-                                break;
-                            }
-                        }
-                        return;
-                    }
-                });
-            }
-        }
-    };
-}
-//获取详细定时任务 传入策略ID参数
-function getTradeDetailTimer(uuid){
-    return {
-        id: uuid,
-        enable: 1,
-        refreshhandler: function(){
-            var param = {
-                strategy_id : this.id
-            }
-            if(this.enable == 1){
-                $.ajax({
-                    url: "/queryTradeDetail",
-                    dataType: "JSON",
-                    cache: false,
-                    type: 'GET',
-                    data: param,
-                    timeout: 5000,
-                    fail: function(e) {
-                        return;
-                    },
-                    error: function(e) {
-                        return;
-                    },
-                    success:function(rdata) {
-                        if(typeof rdata === 'string')
-                            rdata = JSON.parse(rdata);
-                        if(typeof rdata === "undefined" || rdata === null || rdata.length <= 0){
-                            return;
-                        }
-                        //取全部已显示的数据，遍历，找出和本次刷新的account_id相同的记录
-                        //然后把对应的新数据更新到这一行
-                        var tdata = tb_three.data();
-                        return;
-                    }
-                });
-            }
-        }
-    };
-}
 //定时刷新
 function refreshAll(){
-    for(var i=0;i<AccountTimerList.length;i++){
-        var item = AccountTimerList[i];
-        if(item.enable == 1){
-            item.refreshhandler();
-        }
-    }
-    for(var i=0;i<StrategyTimerList.length;i++){
-        var item = StrategyTimerList[i];
-        if(item.enable == 1){
-            item.refreshhandler();
-        }
-    }
+    //账户信息采用全部统一刷新
+    loadAccount();
+    //策略信息采用全部统一刷新
+    loadStrategy();
     //策略详细信息采用全部统一刷新
     loadTradeDetail();
-    /*for(var i=0;i<TradeDetailTimerList.length;i++){
-        var item = TradeDetailTimerList[i];
-        if(item.enable == 1){
-            item.refreshhandler();
-        }
-    }*/
     refTimer = setTimeout("refreshAll()",refreshtime);
 }
 //根据id删除指定条目
@@ -335,4 +156,23 @@ function getAccountIDSelect(accid){
     }
     shtml += '</select>';
     return shtml;
+}
+//策略运行状态转化为中文
+function getStrategyStatus(strid){
+    if(typeof strid === 'undefined' || strid === ''){
+        return '';
+    }
+    if(strid == StrPending){
+        return CHStrPending;
+    }else if(strid == StrStarted){
+        return CHStrStarted;
+    }else if(strid == StrRetry){
+        return CHStrRetry;
+    }else if(strid == StrFailure){
+        return CHStrFailure;
+    }else if(strid == StrSuccess){
+        return CHStrSuccess;
+    }else{
+        return '';
+    }
 }

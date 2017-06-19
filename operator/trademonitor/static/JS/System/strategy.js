@@ -64,35 +64,32 @@ function taskRiskMonitors(start, length) {
     initclick();
 }
 //添加账户
-function addTableOne(){
-    var rowobj = $.extend({},account_info)
-    rowobj.account_id = '<input value="AccountId" class="form-control textbx" style="float : left;"/>';
-    rowobj.account_type = '<select class="form-control textbx">' +
-                        '<option value="CTP"> CTP</option>' +
-                        '</select>';
-    rowobj.dyn_right = "--";
-    rowobj.cash_avalible = "--";
-    rowobj.cash_frozen = "--";
-    rowobj.asset = "--";
-    rowobj.date = "--";
+function addTableOne(rdata){
+    var rowobj = $.extend({},account_info,rdata)
     var arr = [];
     arr.push(rowobj);
     tb_one.rows.add(arr).draw();
 }
 //保存账户
 function saveTableOne(){
-    var rowobj = tb_one.row(tb_one.$('tr.selected')).data();
-    if(typeof rowobj == 'undefined'){
-        showAlert("请选择账户");
+    var rowobj = {};
+    var sAccid = $("#aid").val();
+    if(typeof sAccid === "undefined" || sAccid === ""){
+        showAlert("请输入账户");
         return;
     }
-    if(typeof tb_one.$('tr.selected').children()[0].getElementsByTagName("input")[0] === 'undefined'){
+    var sacctype = $("#acctype").val();
+    if(typeof sacctype === "undefined" || sacctype === ""){
+        showAlert("请选择账户类型");
         return;
     }
-    var acc = tb_one.$('tr.selected').children()[0].getElementsByTagName("input")[0].value;
-    var acctype = tb_one.$('tr.selected').children()[1].getElementsByTagName("select")[0].value;
-    rowobj.account_id = acc;
-    rowobj.account_type = acctype;
+    rowobj.account_id = sAccid;
+    rowobj.account_type = sacctype;
+    rowobj.dyn_right = "--";
+    rowobj.cash_avalible = "--";
+    rowobj.cash_frozen = "--";
+    rowobj.asset = "--";
+    rowobj.date = "--";
     $.ajax({
         url: "/addAccount",
         dataType: "JSON",
@@ -101,15 +98,21 @@ function saveTableOne(){
 		data: rowobj,
 		timeout: 5000,
 		fail: function(e) {
+		    showAlert("账户添加失败");
 			return
 		},
 		error: function(e) {
+		    showAlert("账户添加失败");
 			return;
 		},
 		success:function(rdata) {
+		    if(typeof rdata === 'string'){
+		        rdata = $.parseJSON(rdata);
+		    }
 		    if(rdata[0] == '1'){
 		        showAlert("账户已存在");
 		    }else{
+		        addTableOne(rowobj);
 		        AccountList.push(rdata[0]);
 		        AccountTimerList.push(getAccountTimer(rdata[0]));
 		        showAlert("账户添加成功");
@@ -133,12 +136,17 @@ function deletTableOne(){
 		data: rowobj,
 		timeout: 5000,
 		fail: function(e) {
+		    showAlert("账户删除失败");
 			return;
 		},
 		error: function(e) {
+		    showAlert("账户删除失败");
 			return;
 		},
 		success:function(rdata) {
+		    if(typeof rdata === 'string'){
+		        rdata = $.parseJSON(rdata);
+		    }
 		    if(rdata[0] == '0'){
 		        showAlert("账户ID为空，删除失败");
                 return;
@@ -151,64 +159,44 @@ function deletTableOne(){
     });
 }
 //添加策略
-function addTableTwo(){
-    var rowobj = $.extend({},strategy_info)
-    rowobj.strategy_id = "";
-    rowobj.strategy_name = '<input value="策略名称" class="form-control textbx"/>';
-    rowobj.ticker = '<input value="交易品种" class="form-control textbx"/>';
-    rowobj.position_lot = "--";
-    rowobj.strategy_profit = "--";
-    rowobj.position_profit = "--";
-    rowobj.args = '<input value="arg0,arg1..." class="form-control textbx"/>';
-    rowobj.account_id = getAccountIDSelect("");
-    rowobj.filename = '<input value="filename" class="form-control textbx"/>';
-    rowobj.status = "--";
-    rowobj.date = "";
+function addTableTwo(rdata){
+    var rowobj = $.extend({},strategy_info,rdata)
     var arr = [];
-    $.ajax({
-        url: "/genuuid",
-        dataType: "JSON",
-        cache: false,
-        type: 'GET',
-		data: {},
-		timeout: 5000,
-		fail: function(e) {
-			return
-		},
-		error: function(e) {
-			return;
-		},
-		success:function(rdata) {
-            rowobj.strategy_id = rdata[0];
-		    arr.push(rowobj);
-		    tb_two.rows.add(arr).draw();
-            return;
-		}
-    });
+    arr.push(rowobj);
+    tb_two.rows.add(arr).draw();
 }
-//保存策略/生效
-function saveTableTwo(){
+//策略生效
+function runTableTwo(){
     var rowobj = tb_two.row(tb_two.$('tr.selected')).data();
     if(typeof rowobj == 'undefined'){
         showAlert("请选择策略");
         return;
     }
-    if(typeof tb_two.$('tr.selected').children()[1].getElementsByTagName("input")[0] === 'undefined'){
+    //检测状态，运行中的不允许重复提交
+    var sstatus = tb_two.$('tr.selected').children()[9].innerHTML;
+    if(sstatus === StrStarted || sstatus === StrRetry){
+        showAlert("策略正在运行中");
         return;
     }
-    var strategyid = tb_two.$('tr.selected').children()[0].getElementsByTagName("input")[0].value;
-    var strategyname = tb_two.$('tr.selected').children()[1].getElementsByTagName("input")[0].value;
-    var tradetype = tb_two.$('tr.selected').children()[2].getElementsByTagName("input")[0].value;
-    var args = tb_two.$('tr.selected').children()[6].getElementsByTagName("input")[0].value;
-    var accid = tb_two.$('tr.selected').children()[7].getElementsByTagName("select")[0].value;
-    var filename = tb_two.$('tr.selected').children()[8].getElementsByTagName("input")[0].value;
-    rowobj.strategy_id = strategyid;
-    rowobj.strategy_name = strategyname;
-    rowobj.ticker = tradetype;
-    rowobj.args = args;
-    rowobj.account_id = accid;
-    rowobj.filename = filename;
+    rowobj.strategy_id = tb_two.$('tr.selected').children()[0].getElementsByTagName("input")[0].value;
+    if(typeof tb_two.$('tr.selected').children()[1].getElementsByTagName("input")[0] !== 'undefined'){
+        rowobj.strategy_name = tb_two.$('tr.selected').children()[1].getElementsByTagName("input")[0].value;
+    }
+    if(typeof tb_two.$('tr.selected').children()[2].getElementsByTagName("input")[0] !== 'undefined'){
+        rowobj.ticker = tb_two.$('tr.selected').children()[2].getElementsByTagName("input")[0].value;
+    }
+    if(typeof tb_two.$('tr.selected').children()[6].getElementsByTagName("input")[0] !== 'undefined'){
+        rowobj.args = tb_two.$('tr.selected').children()[6].getElementsByTagName("input")[0].value;
+    }
+    if(typeof tb_two.$('tr.selected').children()[7].getElementsByTagName("select")[0] !== 'undefined'){
+        rowobj.account_id = tb_two.$('tr.selected').children()[7].getElementsByTagName("select")[0].value;
+    }
+    if(typeof tb_two.$('tr.selected').children()[8].getElementsByTagName("input")[0] !== 'undefined'){
+        rowobj.filename = tb_two.$('tr.selected').children()[8].getElementsByTagName("input")[0].value;
+    }
+    rowobj.status = "--";
     var strategy_id = rowobj.strategy_id;
+    var strategy_name = rowobj.strategy_name;
     $.ajax({
         url: "/addStrategy",
         dataType: "JSON",
@@ -217,14 +205,102 @@ function saveTableTwo(){
 		data: rowobj,
 		timeout: 5000,
 		fail: function(e) {
+		    showAlert("策略运行失败");
 			return;
 		},
 		error: function(e) {
+		    showAlert("策略运行失败");
 			return;
 		},
 		success:function(rdata) {
-		    addTableThree(strategy_id,strategyname);
-            showAlert("策略添加成功");
+		    addTableThree(strategy_id,strategy_name);
+            showAlert("策略运行成功");
+            return;
+		}
+    });
+}
+//保存策略
+function saveTableTwo(){
+    var rowobj = {};
+    var sName = $("#sname").val();
+    if(typeof sName === "undefined" || sName === ""){
+        showAlert("请输入策略名");
+        return;
+    }
+    var sttype = $("#ttype").val();
+    if(typeof sttype === "undefined" || sttype === ""){
+        showAlert("请输入交易类型");
+        return;
+    }
+    var sparam = $("#param").val();
+    if(typeof sparam === "undefined" || sparam === ""){
+        showAlert("请输入参数");
+        return;
+    }
+    var saccid = $("#accid").val();
+    if(typeof saccid === "undefined" || saccid === ""){
+        showAlert("请选择账户ID");
+        return;
+    }
+    var sfile = $("#file").val();
+    if(typeof sfile === "undefined" || sfile === ""){
+        showAlert("请输入文件名");
+        return;
+    }
+    rowobj.strategy_name = sName;
+    rowobj.ticker = sttype;
+    rowobj.args = sparam;
+    rowobj.account_id = saccid;
+    rowobj.filename = sfile;
+
+    rowobj.position_lot = "--";
+    rowobj.strategy_profit = "--";
+    rowobj.position_profit = "--";
+    rowobj.status = "--";
+    rowobj.date = "--";
+
+    $.ajax({
+        url: "/genuuid",
+        dataType: "JSON",
+        cache: false,
+        type: 'GET',
+		data: {},
+		timeout: 5000,
+		fail: function(e) {
+		    showAlert("策略ID生成失败");
+			return
+		},
+		error: function(e) {
+		    showAlert("策略ID生成失败");
+			return;
+		},
+		success:function(rdata) {
+		    if(typeof rdata === 'string'){
+		        rdata = $.parseJSON(rdata);
+		    }
+            rowobj.strategy_id = rdata[0];
+		    $.ajax({
+                url: "/addStrategy",
+                dataType: "JSON",
+                cache: false,
+                type: 'GET',
+                data: rowobj,
+                timeout: 5000,
+                fail: function(e) {
+                    showAlert("策略保存失败");
+                    return;
+                },
+                error: function(e) {
+                    showAlert("策略保存失败");
+                    return;
+                },
+                success:function(rdata) {
+                    addTableTwo(rowobj);
+                    addTableThree(rowobj.strategy_id,rowobj.strategy_name);
+                    showAlert("策略保存成功");
+                    return;
+                }
+            });
             return;
 		}
     });
@@ -244,9 +320,11 @@ function stopTableTwo(){
 		data: rowobj,
 		timeout: 5000,
 		fail: function(e) {
+		    showAlert("停止策略失败");
 			return
 		},
 		error: function(e) {
+		    showAlert("停止策略失败");
 			return;
 		},
 		success:function(rdata) {
@@ -270,12 +348,17 @@ function deletTableTwo(){
 		data: rowobj,
 		timeout: 5000,
 		fail: function(e) {
+		    showAlert("策略删除失败");
 			return;
 		},
 		error: function(e) {
+		    showAlert("策略删除失败");
 			return;
 		},
 		success:function(rdata) {
+		    if(typeof rdata === 'string'){
+		        rdata = $.parseJSON(rdata);
+		    }
 		    if(rdata[0] == '0'){
 		        showAlert("策略ID为空，删除失败");
                 return;
@@ -283,6 +366,53 @@ function deletTableTwo(){
             tb_two.row('.selected').remove().draw( false );
             removeListItem(rdata[0],StrType);
             showAlert("策略已删除");
+            return;
+		}
+    });
+}
+//停止全部策略点击方法
+function stopAllStrategyEvent(){
+    showConfirm("即将停止全部正在运行的策略，请确定是否要进行此操作。");
+}
+//停止全部策略
+function stopAllStrategy(){
+    var tdata = tb_two.data();
+    var sindex = 0;
+    iterationStop(tdata,sindex);
+}
+function iterationStop(tdata, index){
+    var rowobj = {
+        strategy_id : tdata[index].strategy_id
+    };
+    $.ajax({
+        url: "/stopStrategy",
+        dataType: "JSON",
+        cache: false,
+        type: 'GET',
+		data: rowobj,
+		timeout: 5000,
+		fail: function(e) {
+		    showAlert("全部停止策略失败");
+			return
+		},
+		error: function(e) {
+		    showAlert("全部停止策略失败");
+			return;
+		},
+		success:function(rdata) {
+		    if(typeof rdata === 'string'){
+		        rdata = $.parseJSON(rdata);
+		    }
+		    if(rdata[0] == '0'){
+		        showAlert("有策略ID为空，全部停止失败");
+                return;
+		    }
+		    index ++;
+		    if(index < tdata.length){
+		        iterationStop(tdata, index);
+		    }else{
+                showAlert("全部停止成功");
+		    }
             return;
 		}
     });
@@ -410,7 +540,7 @@ function initTbOne(dataSet) {
                         "lengthChange": false,
                         "processing": false,
                         "paging": false,
-                        "scrollY": "200px",
+                        "scrollY": "250px",
                         "searching": false,
                         "serverSide": false,
                         "stateSave": false,
@@ -464,7 +594,7 @@ function initTbTwo(dataSet) {
                         "paging": false,
                         "searching": false,
                         "serverSide": false,
-                        "scrollY": "200px",
+                        "scrollY": "250px",
                         "stateSave": false,
                         "ordering": true,
                         "info": false,
@@ -493,10 +623,10 @@ function initTbTwo(dataSet) {
                                         var shtml = "";
                                         if(ShowFlag_Tbtwo){
                                             shtml += '<label style="color : #DDD666; float : left;">' + data + '</label>';
-                                            shtml += '<input type="hidden" value='+ data +'/>';
+                                            shtml += '<input type="hidden" value="'+ data +'"/>';
                                         }else{
                                             shtml += '<label style="color : #DDD666; float : left;">+</label>';
-                                            shtml += '<input type="hidden" value='+ data +'/>';
+                                            shtml += '<input type="hidden" value="'+ data +'"/>';
                                         }
                                         return shtml;
                                     }
@@ -554,7 +684,7 @@ function initTbThree(dataSet) {
                         "searching": false,
                         "serverSide": false,
                         "stateSave": false,
-                        "scrollY": "200px",
+                        "scrollY": "250px",
                         "ordering": true,
                         "info": false,
                         "ajax": function (data, callback, settings) {

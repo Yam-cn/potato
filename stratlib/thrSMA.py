@@ -159,10 +159,16 @@ def testStrategy():
     return_list = []
     for item in retAnalyzer.getCumulativeReturns():
         return_list.append(item)
-        
-    
-    
-if __name__ == "__main__": 
+
+
+def run_strategy(ticker, account_id, paras):
+    print ticker
+    print account_id
+    print paras
+
+    strat = testStrategy()
+
+if __name__ == "__main__":
     testStrategy()
         
 

@@ -1,5 +1,5 @@
 from celery.result import AsyncResult
-from utils.mod_mongo import *
+from components.database.mongo import *
 
 def get_mongodb_inst():
     return mongo_db(collection = "tasks_info")

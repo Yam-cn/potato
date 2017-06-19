@@ -3,14 +3,13 @@ Created on 2017-01-06
 
 @author: Chen
 '''
-from trademonitor.dbHelper.MongoDBHelper import *
+from components.database.mongo import *
 
 class StrategyInfoDao():
-    
+
     def __init__(self):
-        mongoDBHelper = MongoDBHelper()
-        self.StrategyInfoDB = mongoDBHelper.getStrategyInfoDB()
-        
+        self.StrategyInfoDB = mongo_db(collection = "strategy_info").get_col()
+
     def addStrategy(self,strategy):
         self.StrategyInfoDB.insert(strategy)
         return strategy["strategy_id"]

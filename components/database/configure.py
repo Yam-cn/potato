@@ -8,18 +8,16 @@ Created on Sat Dec 31 17:48:19 2016
 from configparser import ConfigParser, NoSectionError, NoOptionError
 import os
 
-def getMongoInfo():
+def getConfigInfo(key):
     parser = ConfigParser()
     parser.read(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'config.ini'))
 
     serv_conf = {}
     try:
-        serv_conf['host'] = parser.get('Mongo', 'host')
-        serv_conf['port'] = parser.getint('Mongo', 'port')
-        serv_conf['user'] = parser.get('Mongo', 'user')
-        serv_conf['pwd'] = parser.get('Mongo', 'password')
-        serv_conf['dbname'] = parser.get('Mongo', 'dbname')
-
+        serv_conf['host'] = parser.get(key, 'host')
+        serv_conf['port'] = parser.getint(key, 'port')
+        if key == 'Mongo':
+            serv_conf['dbname'] = parser.get(key, 'dbname')
     except (NoSectionError, NoOptionError) as err:
         raise Exception('configuration error {0}'.format(err))
         exit(-1)
@@ -27,4 +25,5 @@ def getMongoInfo():
 
 
 if __name__ == '__main__':
-    ret = getMongoInfo()
+    ret = getConfigInfo('Mongo')
+    print ret

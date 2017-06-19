@@ -15,8 +15,8 @@ from trademonitor.dao.TradeDetailDao import *
 from trademonitor.entity.AccountInfo import *
 from trademonitor.entity.StrategyInfo import *
 from trademonitor.entity.TradeDetail import *
-from strategyMgmt import *
-from strategy.tasks import *
+from components.celery.tasks import *
+from components.celery.tasksmgmt import *
 
 def strategy(request):
 
@@ -90,8 +90,13 @@ def addStrategy(request):
     else:
         strdao.updateStrategy(strategy_id, StrategyInfoDict)
     print "--==Running the strategy==--"
-    result = runAlgo_task.delay(2, 2)
-    print(result.backend)
+    ticker = request.REQUEST.get('ticker','')
+    account_id = request.REQUEST.get('account_id','')
+    algo_fname = request.REQUEST.get('filename','')
+    args = request.REQUEST.get('args','')
+    task = runAlgo.delay(ticker, account_id, algo_fname, args)
+    add_task(strategy_id, task.id)
+    print 'Task is running'
 
     return strategy_id
 
@@ -99,16 +104,15 @@ def addStrategy(request):
 @Ajax
 def stopStrategy(request):
     strategyid = request.REQUEST.get('strategy_id','')
+    rlist = []
     if strategyid == '':
-        return 0
-    strdao = StrategyInfoDao()
-    if isStrategyExisted(strategyid):
-        strdao.stopStrategy(strategyid)
-    
+        rlist.append(0)
+        return rlist
     print "--==Stopping the strategy==--"
-    stop_strategy(strategyid)
-    
-    return strategyid
+    stop_task(strategyid)
+
+    rlist.append(strategyid)
+    return rlist
 
 @csrf_exempt
 @Ajax
@@ -122,6 +126,10 @@ def queryStrategy(request):
     for str in result:
         rdict = str
         rdict.pop('_id')
+        try:
+            rdict['status'] = get_task_status(strategy_id)
+        except Exception, e:
+            pass
         rlist.append(rdict)
     return rlist
 
@@ -131,9 +139,15 @@ def queryAllStrategy(request):
     strdao = StrategyInfoDao()
     result = strdao.getAllStrategy()
     rlist = []
-    for str in result:
-        rdict = str
+    for item in result:
+        rdict = item
         rdict.pop('_id')
+        #ISOTIMEFORMAT=u'%Y-%m-%d %X'
+        #rdict['date'] = time.strftime(ISOTIMEFORMAT, time.localtime() )
+        try:
+            rdict['status'] = get_task_status(rdict["strategy_id"])
+        except Exception, e:
+            print e
         rlist.append(rdict)
     return rlist
 
@@ -146,6 +160,7 @@ def deleteStrategy(request):
     strdao = StrategyInfoDao()
     if isStrategyExisted(strategyid):
         strdao.deleteStrategyID(strategyid)
+    remove_task(strategyid)
     rlist = []
     rlist.append(strategyid)
     return rlist
@@ -202,6 +217,20 @@ def queryAllTradeDetail(request):
         rdict = detail
         rdict.pop('_id')
         rlist.append(rdict)
+    return rlist
+
+@csrf_exempt
+@Ajax
+def queryStrategyStatus(request):
+    rlist = []
+    strategy_id = request.REQUEST.get('strategy_id','')
+    if strategy_id == '':
+        rlist.append('')
+        return rlist
+    try:
+        rlist.append(get_task_status(strategy_id))
+    except Exception, e:
+        rlist.append('')
     return rlist
 
 def isAccountExisted(account_id):

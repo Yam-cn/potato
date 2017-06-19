@@ -3,13 +3,12 @@ Created on 2017-01-06
 
 @author: Chen
 '''
-from trademonitor.dbHelper.MongoDBHelper import *
+from components.database.mongo import *
 
 class TradeDetailDao():
     def __init__(self):
-        mongoDBHelper = MongoDBHelper()
-        self.TradeDetailDB = mongoDBHelper.getTradeDetailDB()
-    
+        self.TradeDetailDB = mongo_db(collection = "trade_detail").get_col()
+
     def addTradeDetail(self,tradedetail):
         if type(tradedetail) is not dict:
             print 'the type of insert data isn\'t dict'             

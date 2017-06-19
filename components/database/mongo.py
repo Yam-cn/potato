@@ -1,17 +1,19 @@
 #encoding:utf-8
 #name:mod_db.py
 from pymongo import MongoClient
-import os
+from components.database.configure import getConfigInfo
+from engine.logger import getLogger
 
-
-class mongo_db:
+class mongo_db(object):
     def __init__(self, collection):
-        self.__host = DBHOST
-        self.__port = DBPORT
-        self.__logger = logger
+        serv = getConfigInfo('Mongo')
+        self.__host = serv['host']
+        self.__port = serv['port']
+        self.__dbname = serv['dbname']
+        self.__logger = getLogger('Mongodb')
         self.__client = self.__connect()
-        self.__col = self.__client['potatodb'][collection]
-        
+        self.__col = self.__client[self.__dbname][collection]
+
     def __connect(self):
         conn = False
         try:

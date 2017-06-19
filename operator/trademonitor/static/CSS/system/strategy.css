@@ -171,3 +171,16 @@ table.dataTable.no-footer, .dataTables_scroll{
     color:#C0C0C0;
     margin:0px 5px;
 }
+
+.mdLine li{
+    margin: 10px 0px;
+    font-size: 18px;
+}
+
+.tbBox>thead>tr>td,.tbBox>tbody>tr>td,.tbBox>tfoot>tr>td,
+.tbBox>thead>tr>th,.tbBox>tbody>tr>th,.tbBox>tfoot>tr>th{border:1px solid #332f2f}
+
+.tbBox th{
+    color: #45a4cf;
+    font-size:14px;
+}

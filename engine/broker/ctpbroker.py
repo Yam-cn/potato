@@ -19,14 +19,14 @@ Created on Sun Dec 11 14:31:04 2016
 
 import time
 import Queue
-import pymongo
 from datetime import datetime
 
 from engine import broker
 from engine.logger import getLogger
-from engine.utils.configure import getMongoInfo
 from engine.api.ctp import CTPTdApi
-
+from components.database.mongo import *
+from components.celery.tasks import *
+from components.celery.tasksmgmt import *
 
 logger = getLogger('CTP_broker')
 
@@ -66,22 +66,23 @@ class LiveBroker(broker.Broker):
         
         self.__positions = {}
         self.__activeOrders = {}
-        
-        mongo_info = getMongoInfo()
-        self.__mongo = pymongo.MongoClient(host=mongo_info['host'],\
-                                           port=mongo_info['port'])
-        
-        
+        self.__TradeDetailDB = mongo_db(collection = "trade_detail")
+        self.__AccountInfoDB = mongo_db(collection = "account_info")
+        self.__StrategyInfoDB = mongo_db(collection = "strategy_info")
+        #self.__CyclThread = Thread(target=self.refreshInfo)
+
     def login(self, timeout=10):
-        account_info = self.__mongo.tradedb.account_info.find_one({'userid': self.__userid})  
-        address = "tcp://" + str(account_info['address']) + ":" + str(account_info['port'])
-        userid = str(account_info['userid'])
-        password = str(account_info['password'])
-        brokerid = str(account_info['brokerid'])
-        
+        account_info = mongo_db('ctp_account')
+        userid = self.__userid
         if userid is None:
-            raise Exception('userid not found')
-        
+                raise Exception('userid not found')
+
+        address = "tcp://" + str(account_info.read({"userid":userid})['address']) + ":" + str(account_info.read({"userid":userid})['port'])
+        password = str(account_info.read({"userid":userid})['password'])
+        brokerid = str(account_info.read({"userid":userid})['brokerid'])
+
+
+
         self.__msg_queue = Queue.Queue()
         self.__api = CTPTdApi.CTPTdApi(self.__msg_queue)
         self.__api.connect(userid, password, brokerid, address)
@@ -114,26 +115,33 @@ class LiveBroker(broker.Broker):
         assert(order.getId() in self.__activeOrders)
         assert(order.getId() is not None)
         del self.__activeOrders[order.getId()]
-        
-        
+
+    def refreshInfo():
+        pass
+
     def refreshAccountBalance(self, msg_dict):
         """Refreshes cash and account balance."""
-        
         # logger.info("updating account balance.")
         # Cash
-        self.__cash_available = round(msg_dict['cash_available'], 2)
-        self.__margin = round(msg_dict['margin'], 2)
-        self.__cash_frozen = round(msg_dict['cash_frozen'], 2)
-        
-        self.__mongo.tradedb.account_balance.find_one_and_replace({}, msg_dict)
-        
-        
+        doc = {'dyn_right': msg_dict['balance'],
+               'cash_frozen': msg_dict['cash_frozen'],
+               'cash_avalible': msg_dict['cash_available'],
+               'asset': msg_dict['margin']},
+
+        self.__AccountInfoDB.update({'aaccount_id':self.__userid}, doc, upsert=True)
+
     def refreshStrategInfo(self, strategy_info_dict):
-        self.__mongo.tradedb.strategy_info.find_one_and_replace({}, strategy_info_dict)
-        
-    
+        """Refreshes Strategy info"""
+        doc = {'position_profit': msg_dict['close_profit'],  #????
+               'strategy_profit': None,
+               'position_lot': msg_dict['position']}
+
+        self.__StrategyInfoDB.update({'strategy_id':find_strategy(get_task_id())}, doc, upsert=True)
+
+
     def _onUserTrades(self, msg_dict):
-        order = self.__activeOrders.get(msg_dict['order_id']) 
+        print "_onUserTrades"
+        order = self.__activeOrders.get(msg_dict['order_id'])
         if order is not None:
             commision = self.getInstrumentTraits().getCommission(msg_dict['instrument_id'])
             fill_price = msg_dict['price']
@@ -151,11 +159,16 @@ class LiveBroker(broker.Broker):
             else:
                 eventType = broker.OrderEvent.Type.PARTIALLY_FILLED
             self.notifyOrderEvent(broker.OrderEvent(order, eventType, orderExecutionInfo))
-            
-            self.__mongo.tradedb.trades.insert_one(msg_dict)
-            
+
+            print msg_dict
+            self.__TradeDetailDB.update({'strategy_id':find_strategy(get_task_id())}, msg_dict, upsert=True)
+
             # Update cash and shares.
             self.__api.qryAccount()
+
+            # Update position.
+            self.__api.qryPosition()
+
         else:
             logger.info("Trade %d refered to order %d that is not active" % (int(msg_dict['trade_id']), int(msg_dict['order_id'])))
             
@@ -171,8 +184,11 @@ class LiveBroker(broker.Broker):
             
             # Update cash and shares.
             self.__api.qryAccount()
-            
-                
+
+            # Update position.
+            self.__api.qryPosition()
+
+
     # BEGIN observer.Subject interface
     def start(self):
         #self.refreshAccountBalance()
@@ -209,7 +225,10 @@ class LiveBroker(broker.Broker):
                 self.refreshAccountBalance(msg)
             elif msg['event_type'] == CTPTdApi.EventType.ON_ORDER_ACTION:
                 self._onOrderAction(msg)
-            
+            elif msg['event_type'] == CTPTdApi.EventType.ON_QUERY_POSITION:
+                self.refreshStrategInfo(msg)
+            else:
+                pass
 
     def peekDateTime(self):
         # Return None since this is a realtime subject.

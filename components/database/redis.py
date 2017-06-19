@@ -2,16 +2,16 @@
 #name:mod_db.py
 
 import redis
-import os
+from engine.logger import getLogger
+from components.database.configure import getConfigInfo
 
 
-
-
-class redis_db:
+class redis_db(object):
     def __init__(self):
-        self._host = DBHOST
-        self._port = DBPORT
-        self._logger = logger
+	    serv = getConfigInfo('Redis')
+        self._host = serv['host']
+        self._port = serv['port']
+        self.__logger = getLogger('Redis')
         self._conn = self.connect()
         
     def connect(self):

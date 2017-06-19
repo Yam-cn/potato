@@ -28,7 +28,7 @@ ADD start-all.sh /opt/potato/operator/trademonitor/start-all.sh
 
 
 ENV PYTHONPATH=/opt/potato
-ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/potato/engine/api/ctp:/usr/local/lib
+ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/potato/engine/api/ctp/lib/linux:/usr/local/lib
 
 WORKDIR /notebook
 # clean up

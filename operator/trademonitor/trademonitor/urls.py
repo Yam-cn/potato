@@ -9,6 +9,7 @@ urlpatterns = patterns('',
     # ... the rest of your URLconf goes here ...
 )
 urlpatterns += patterns('trademonitor.controller.stratgyController',
+    url(r'^$', 'strategy'),
     url(r'^strategy/$', 'strategy'),
     url(r'^addAccount/$', 'addAccount'),
     url(r'^deleteAccount/$', 'deleteAccount'),
@@ -22,6 +23,7 @@ urlpatterns += patterns('trademonitor.controller.stratgyController',
     url(r'^queryAllStrategy/$', 'queryAllStrategy'),
     url(r'^queryTradeDetail/$', 'queryTradeDetail'),
     url(r'^queryAllTradeDetail/$', 'queryAllTradeDetail'),
+    url(r'^queryStrategyStatus/$', 'queryStrategyStatus'),
 )
 urlpatterns += patterns('trademonitor.controller.genuuidController',
     url(r'^genuuid/$', 'genuuid'),

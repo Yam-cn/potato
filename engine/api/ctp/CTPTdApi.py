@@ -5,8 +5,8 @@ import os
 from vnctptd import TdApi
 from ctpDataType import defineDict
 
-from pyalgotrade.broker import Order
-from pyalgotrade.logger import getLogger
+from engine.broker import Order
+from engine.logger import getLogger
 
 
 class EventType(object):

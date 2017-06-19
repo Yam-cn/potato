@@ -4,15 +4,13 @@ Created on 2017-01-06
 @author: Chen
 '''
 
-from trademonitor.dbHelper.MongoDBHelper import *
+from components.database.mongo import *
 
 class AccountInfoDao():
     
     def __init__(self):
-        mongoDBHelper = MongoDBHelper()
-        self.AccountInfoDB = mongoDBHelper.getAccountInfoDB()
-        
-       
+        self.AccountInfoDB = mongo_db(collection = "account_info").get_col()
+
     def addAccount(self,account):
         if type(account) is not dict:
             print 'the type of insert data isn\'t dict'             

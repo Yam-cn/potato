@@ -27,8 +27,13 @@ class TestStrategy(strategy.BaseStrategy):
         print '___________________________________'
         print 'onExitOk called'
         self.__position = {}
-        
-        
+
+    def exit(self):
+        print '___________________________________'
+        print 'Stop called'
+        self.stop()
+
+
     def onBars(self, bars):
         self.bar_count += 1
         # If a position was not opened, check if we should enter a long position.
@@ -42,19 +47,10 @@ class TestStrategy(strategy.BaseStrategy):
                     'close: ', b.getClose(), 'volume:', b.getVolume(), 'amount:', b.getAmount()
                     
         print 'cash:{0}'.format(self.getBroker().getCash())
-        
-        
-        if len(self.__position) > 0:
-            if self.bar_count == 2:
-                print 'cancelling order'
-                self.__position.values()[0].cancelEntry()
-                self.__position = {}
-            else:
-                print 'sending sell order'
-                self.__position.values()[0].exitLimit(int(b.getClose() * 0.99), goodTillCanceled=None)
-            #self.__position.exitMarket()                
-            
-        
+
+
+
+
         if len(self.__position) == 0:
             print 'sending buy order'
             if self.bar_count == 1:
@@ -64,8 +60,29 @@ class TestStrategy(strategy.BaseStrategy):
                 pos = self.enterLongLimit(self.__instruments[0], int(b.getClose() * 1.01), 1)
                 self.__position[pos.getEntryOrder().getId()] = pos
             #print bars[self.__instrument].getDateTime(), bars[self.__instrument].getPrice()
-            
-    
+
+        elif len(self.__position) > 0 and len(self.__position) < 6:
+            if self.bar_count == 2:
+                print 'cancelling order'
+                self.__position.values()[0].cancelEntry()
+                self.__position = {}
+            else:
+                print 'sending sell order'
+                self.__position.values()[0].exitLimit(int(b.getClose() * 0.99), goodTillCanceled=None)
+            #self.__position.exitMarket()
+        else:
+            self.exit( )
+
+
+def run_strategy(ticker, account_id, paras):
+    print ticker, account_id, paras
+    feed = CTPLiveFeed([ticker], 10)
+    brk = LiveBroker(account_id)
+
+    strat = TestStrategy(feed, brk)
+    strat.run()
+
+
 if __name__ == "__main__":
     ticker = 'ag1706'
     

@@ -60,7 +60,7 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
 )
 INSTALLED_APPS += ("djcelery", )
-INSTALLED_APPS += ("strategy", )
+INSTALLED_APPS += ("components.celery", )
 
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
