@@ -53,7 +53,7 @@ function loadStrategy(){
                     StrategyList.push(oitem.strategy_id);
                 }
             }
-            tb_two.clear().rows.add(rdata).draw();
+            tb_two.clear().rows.add(rdata).draw(false);
             return;
         }
     });
@@ -76,7 +76,7 @@ function loadTradeDetail(){
         success:function(rdata) {
             if(typeof rdata === 'string')
                 rdata = JSON.parse(rdata);
-            tb_three.clear().rows.add(rdata).draw();
+            tb_three.clear().rows.add(rdata).draw(false);
             return;
         }
     });

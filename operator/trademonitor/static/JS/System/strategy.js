@@ -14,33 +14,6 @@
     loadStrategy();
     loadTradeDetail();
     setTimeout("refreshAll()",refreshtime);
-    /*$(window).resize(function () {
-        var reload = false;
-        tb_one.destroy(); tb_one = null;
-        tb_two.destroy(); tb_two = null;
-        tb_three.destroy(); tb_three = null;
-        
-        if (oneSource != null) {
-            initTbOne(oneSource);
-        }
-        else
-            reload = true;
-
-        if (twoSource != null) {
-            initTbTwo(twoSource);
-        }
-        else
-            reload = true;
-
-        if (threeSource != null) {
-            initTbThree(threeSource);
-        }
-        else
-            reload = true;
-       
-        if (reload)
-            taskRiskMonitors(0, 10);
-    });*/
 });
 
 function taskRiskMonitors(start, length) {
@@ -114,7 +87,6 @@ function saveTableOne(){
 		    }else{
 		        addTableOne(rowobj);
 		        AccountList.push(rdata[0]);
-		        AccountTimerList.push(getAccountTimer(rdata[0]));
 		        showAlert("账户添加成功");
 		    }
             return;
@@ -198,7 +170,7 @@ function runTableTwo(){
     var strategy_id = rowobj.strategy_id;
     var strategy_name = rowobj.strategy_name;
     $.ajax({
-        url: "/addStrategy",
+        url: "/runStrategy",
         dataType: "JSON",
         cache: false,
         type: 'GET',
@@ -296,7 +268,6 @@ function saveTableTwo(){
                 },
                 success:function(rdata) {
                     addTableTwo(rowobj);
-                    addTableThree(rowobj.strategy_id,rowobj.strategy_name);
                     showAlert("策略保存成功");
                     return;
                 }

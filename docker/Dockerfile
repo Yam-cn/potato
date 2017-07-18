@@ -20,12 +20,16 @@ RUN pip install django-celery
 RUN pip install celery
 RUN pip install flower
 
-#°²·Špyter
+#°²×°jupyter
 RUN pip install jupyter
 
-ADD potato /opt/potato
-ADD start-all.sh /opt/potato/operator/trademonitor/start-all.sh
+RUN apt-get install -y git
 
+RUN apt-get clean
+
+RUN cd /opt && git clone https://code.aliyun.com/idoquant/potato.git \
+ && chmod +x potato/docker/start-all.sh \
+ && cp potato/docker/start-all.sh potato/operator/trademonitor/start-all.sh
 
 ENV PYTHONPATH=/opt/potato
 ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/potato/engine/api/ctp/lib/linux:/usr/local/lib
@@ -40,3 +44,5 @@ EXPOSE 8080
 EXPOSE 8888
 EXPOSE 5555
 EXPOSE 27017
+
+ENTRYPOINT cd /opt/potato/operator/trademonitor  && ./start-all.sh

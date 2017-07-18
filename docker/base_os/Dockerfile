@@ -4,18 +4,7 @@ FROM ubuntu:16.04
 ENV TZ=Asia/Shanghai
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-RUN echo "" > /etc/apt/sources.list \
-    && echo "deb http://mirrors.aliyun.com/ubuntu/ xenial main multiverse restricted universe" >> /etc/apt/sources.list \
-    && echo "deb http://mirrors.aliyun.com/ubuntu/ xenial-backports main multiverse restricted universe" >> /etc/apt/sources.list \
-    && echo "deb http://mirrors.aliyun.com/ubuntu/ xenial-proposed main multiverse restricted universe" >> /etc/apt/sources.list \
-    && echo "deb http://mirrors.aliyun.com/ubuntu/ xenial-security main multiverse restricted universe" >> /etc/apt/sources.list \
-    && echo "deb http://mirrors.aliyun.com/ubuntu/ xenial-updates main multiverse restricted universe" >> /etc/apt/sources.list \
-    && echo "deb-src http://mirrors.aliyun.com/ubuntu/ xenial main multiverse restricted universe" >> /etc/apt/sources.list \
-    && echo "deb-src http://mirrors.aliyun.com/ubuntu/ xenial-backports main multiverse restricted universe" >> /etc/apt/sources.list \
-    && echo "deb-src http://mirrors.aliyun.com/ubuntu/ xenial-proposed main multiverse restricted universe" >> /etc/apt/sources.list \
-    && echo "deb-src http://mirrors.aliyun.com/ubuntu/ xenial-security main multiverse restricted universe" >> /etc/apt/sources.list \
-    && echo "deb-src http://mirrors.aliyun.com/ubuntu/ xenial-updates main multiverse restricted universe" >> /etc/apt/sources.list \
-    && apt-get -y update
+RUN apt-get -y update
 
 # °²×°ÒÀÀµ
 RUN apt-get install -y  python python-pip python-dev python-setuptools build-essential libxml2-dev libxslt-dev  libbz2-dev
@@ -49,10 +38,9 @@ RUN cd /tmp; \
         rm -rf ta-lib
 RUN pip install TA-Lib
 
-# Boost 1.60
-ADD boost_1_60_0.tar.gz /tmp/
+
 RUN cd /tmp; \
-        #wget http://sourceforge.net/projects/boost/files/boost/1.60.0/boost_1_60_0.tar.gz; \
+        wget http://sourceforge.net/projects/boost/files/boost/1.60.0/boost_1_60_0.tar.gz; \
         tar -xzvf boost_1_60_0.tar.gz; \
         cd /tmp/boost_1_60_0; \
         ./bootstrap.sh --prefix=/usr/local; \
@@ -61,6 +49,7 @@ RUN cd /tmp; \
         rm -rf boost_1_60_0
 
 RUN pip install lxml
+RUN pip install bs4
 RUN pip install tushare
 
 # clean up

@@ -125,7 +125,3 @@ class TestCTPMdApi(TestCase):
 
         # logger called check
         self.assertTrue(self._logger.error.called)
-
-
-
-

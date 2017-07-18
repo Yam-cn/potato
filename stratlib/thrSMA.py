@@ -9,7 +9,6 @@ if __name__ == '__main__':
     import sys
     sys.path.append("..")     
     from engine import bar
-    from engine import plotter
 # 以上模块仅测试用
 from engine.broker.fillstrategy import DefaultStrategy
 from engine.broker.backtesting import TradePercentage
@@ -95,9 +94,8 @@ class thrSMA(strategy.BacktestingStrategy):
     
 def testStrategy():
     from engine import bar
-    from engine import plotter
-    
-    strat = thrSMA    
+
+    strat = thrSMA
     instrument = '600288'
     market = 'SH'
     fromDate = '20150101'
@@ -108,10 +106,11 @@ def testStrategy():
     
     #############################################path set ############################33 
     import os
+    print os.path.split(os.path.realpath(__file__))
     if frequency == bar.Frequency.MINUTE:
-        path = os.path.join('..', 'histdata', 'minute')
+        path = os.path.join(os.environ.get('STRATEGYPATH'), '..', 'histdata', 'minute')
     elif frequency == bar.Frequency.DAY:
-        path = os.path.join('..', 'histdata', 'day')
+        path = os.path.join(os.environ.get('STRATEGYPATH'), '..', 'histdata', 'day')
     filepath = os.path.join(path, instrument + market + ".csv")
     
     
@@ -138,15 +137,8 @@ def testStrategy():
     strat.attachAnalyzer(drawDownAnalyzer)
     tradesAnalyzer = trades.Trades()
     strat.attachAnalyzer(tradesAnalyzer)
-    
-    if plot:
-        plt = plotter.StrategyPlotter(strat, True, True, True)
-        
+
     strat.run()
-    
-    if plot:
-        plt.plot()
-        
 
 
     #夏普率

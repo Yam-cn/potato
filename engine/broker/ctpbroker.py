@@ -132,7 +132,7 @@ class LiveBroker(broker.Broker):
 
     def refreshStrategInfo(self, strategy_info_dict):
         """Refreshes Strategy info"""
-        doc = {'position_profit': msg_dict['close_profit'],  #????
+        doc = {'position_profit': msg_dict['close_profit'],  #³Ö²ÖÓ¯¿÷
                'strategy_profit': None,
                'position_lot': msg_dict['position']}
 
