@@ -1,17 +1,18 @@
 version: "2"
 
 services:
-    baso_os:
-        build:
-            context: ./base_os
-            dockerfile: Dockerfile
-        image: base_os:0.2
+    #baso_os:
+    #    build:
+    #        context: ./base_os
+    #        dockerfile: Dockerfile
+    #    image: base_os:0.2
     potato_suit:
         restart: always
         build:
             context: ./
             dockerfile: Dockerfile
-        image: potato:0.8
+        #image: potato:0.8
+        image:registry.cn-hangzhou.aliyuncs.com/potato/potato:0.8
         container_name: potato_suit
         hostname: potato_suit
         ports:
@@ -22,4 +23,9 @@ services:
         volumes:
             - /home/work/project/potato/notebook:/notebook
             - /home/work/project/potato/stratlib:/opt/stratlib
-            - /data/mongodb:/var/lib/mongodb
+            - /data/mongodb:/var/lib/mongodb           
+        #logging:
+        #    driver: "gelf"
+        #    options:
+        #        gelf-address: "udp://118.178.135.152:12201"
+                #syslog-address: "tcp://118.178.135.152:5000"

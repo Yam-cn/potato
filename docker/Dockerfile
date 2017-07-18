@@ -33,6 +33,11 @@ RUN cd /opt && git clone https://code.aliyun.com/idoquant/potato.git \
 
 ENV PYTHONPATH=/opt/potato
 ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/opt/potato/engine/api/ctp/lib/linux:/usr/local/lib
+ENV STRATEGYPATH=/opt/potato/stratlib/
+
+# Ê±ÇøÉèÖÃ
+ENV TZ=Asia/Shanghai
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
 WORKDIR /notebook
 # clean up
