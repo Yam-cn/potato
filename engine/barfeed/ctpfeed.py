@@ -54,7 +54,7 @@ class GetBarThread(PollingThread):
 
         self._ticksDf = {}
         self.__lock = Lock()
-        
+
         for identifier in self.__identifiers:
             self._ticksDf[identifier] = DataFrame(columns=['time', 'price', 'volume', 'amount'])
 

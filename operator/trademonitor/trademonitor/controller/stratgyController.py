@@ -3,7 +3,7 @@ Created on 2016-8-6
 
 @author: Chen
 '''
-from django.http import HttpResponse  
+from django.http import HttpResponse
 from django.shortcuts import render
 from django.shortcuts import render_to_response
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
@@ -83,12 +83,17 @@ def addStrategy(request):
     strdao = StrategyInfoDao()
     oStrategyInfo = StrategyInfo(request)
     StrategyInfoDict = oStrategyInfo.getStrategyInfoDict()
-
     strategy_id = request.REQUEST.get('strategy_id','')
     if not isStrategyExisted(strategy_id):
         strdao.addStrategy(StrategyInfoDict)
     else:
         strdao.updateStrategy(strategy_id, StrategyInfoDict)
+    return strategy_id
+
+@csrf_exempt
+@Ajax
+def runStrategy(request):
+    strategy_id = request.REQUEST.get('strategy_id','')
     print "--==Running the strategy==--"
     ticker = request.REQUEST.get('ticker','')
     account_id = request.REQUEST.get('account_id','')

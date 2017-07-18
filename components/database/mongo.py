@@ -22,10 +22,10 @@ class mongo_db(object):
             self.__logger.error("connect database failed, %s" % str(e))
             conn = False
         return conn
-        
+
     def get_col(self):
         return self.__col
-        
+
     def insert(self, doc):
         flag = False
         if(self.__client):
@@ -45,16 +45,16 @@ class mongo_db(object):
             except Exception, e:
             	self.__logger.warn("update monogodb exception, %s" % str(e))
         return flag
-        
+
     def read(self, filter):
         result = {}
         if(self.__client):
             try:
-            	result = self.__col.find_one(filter)            
+            	result = self.__col.find_one(filter)
             except Exception, e:
             	self.__logger.warn("find monogodb exception, %s" % str(e))
         return result
-        
+
     def delete(self, filter):
         flag = False
         if(self.__client):
@@ -70,5 +70,3 @@ if __name__ == "__main__":
     col.update({'2':'b'}, {'2':'b', 'd':'2'}, upsert=True)
     col.update({'3':'b'}, {'2':'b', 'd':'2'}, upsert=True)
     print col.get_col().update_one({'4':'b'}, {"$set":{'2':'b', 'd':'2'}}, upsert=True)
-    
-        

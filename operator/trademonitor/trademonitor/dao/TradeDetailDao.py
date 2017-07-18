@@ -11,7 +11,7 @@ class TradeDetailDao():
 
     def addTradeDetail(self,tradedetail):
         if type(tradedetail) is not dict:
-            print 'the type of insert data isn\'t dict'             
+            print 'the type of insert data isn\'t dict'
             exit(0)
         self.TradeDetailDB.insert(tradedetail)
 

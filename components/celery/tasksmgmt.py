@@ -12,7 +12,7 @@ def add_task(strategy_id, task_id):
 def remove_task(strategy_id):
     db = get_mongodb_inst()
     db.delete( {'strategy_id': strategy_id})
-    
+
 def find_task(strategy_id):
     db = get_mongodb_inst()
     return db.read( { 'strategy_id': strategy_id} )['task_id']
@@ -22,11 +22,11 @@ def find_strategy(task_id):
     return db.read( { 'task_id': task_id} )['strategy_id']
 
 def get_task_status(strategy_id):
-    return AsyncResult(find_task(strategy_id)).status 
+    return AsyncResult(find_task(strategy_id)).status
 
 def stop_task(task_id):
-    return AsyncResult(find_task(task_id)).revoke(terminate=True) 
-    
+    return AsyncResult(find_task(task_id)).revoke(terminate=True)
+
 if __name__ == '__main__':
     add_task("1234567", 111)
     add_task("1234566", 112)

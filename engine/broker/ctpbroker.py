@@ -20,7 +20,6 @@ Created on Sun Dec 11 14:31:04 2016
 import time
 import Queue
 from datetime import datetime
-
 from engine import broker
 from engine.logger import getLogger
 from engine.api.ctp import CTPTdApi
@@ -33,10 +32,10 @@ logger = getLogger('CTP_broker')
 class FutureTraits(broker.InstrumentTraits):
     def roundQuantity(self, quantity):
         return round(quantity, 2)
-        
+
     def getCommission(self, instrument_id):
         return 0
-        
+
 
 class LiveBroker(broker.Broker):
     """A CTP live broker.
@@ -54,7 +53,7 @@ class LiveBroker(broker.Broker):
     """
 
     QUEUE_TIMEOUT = 0.01
-    
+
     ##TODO: need a margin value dict to calculate if there is enough cash for orders
     def __init__(self, userid):
         broker.Broker.__init__(self)
@@ -63,7 +62,7 @@ class LiveBroker(broker.Broker):
         self.__cash_available = 0
         self.__margin = 0
         self.__cash_frozen = 0
-        
+
         self.__positions = {}
         self.__activeOrders = {}
         self.__TradeDetailDB = mongo_db(collection = "trade_detail")
@@ -86,7 +85,7 @@ class LiveBroker(broker.Broker):
         self.__msg_queue = Queue.Queue()
         self.__api = CTPTdApi.CTPTdApi(self.__msg_queue)
         self.__api.connect(userid, password, brokerid, address)
-        
+
         ##check if login successed
         t1 = time.time()
         while True:
@@ -94,18 +93,18 @@ class LiveBroker(broker.Broker):
             if self.__api.loginStatus:
                 logger.info('login successful')
                 break
-                
+
             elif time.time() - t1 >= timeout:
                 logger.info('login timeout')
                 break
-                
+
         # Store the last trade id since we'll start processing new ones only.
         old_messages = []
         while self.__msg_queue.qsize() > 0:
             old_messages.append(self.__queue.get())
             logger.info("%d msg found before starting broker" % (self.__lastTradeId))
-            
-        
+
+
     def _registerOrder(self, order):
         assert(order.getId() not in self.__activeOrders)
         assert(order.getId() is not None)
@@ -132,7 +131,7 @@ class LiveBroker(broker.Broker):
 
     def refreshStrategInfo(self, strategy_info_dict):
         """Refreshes Strategy info"""
-        doc = {'position_profit': msg_dict['close_profit'],  #³Ö²ÖÓ¯¿÷
+        doc = {'position_profit': msg_dict['close_profit'],  #æŒä»“ç›ˆäº
                'strategy_profit': None,
                'position_lot': msg_dict['position']}
 
@@ -147,7 +146,7 @@ class LiveBroker(broker.Broker):
             fill_price = msg_dict['price']
             volume = msg_dict['volume']
             datetime = msg_dict['datetime']
-            
+
             # Update the order.
             orderExecutionInfo = broker.OrderExecutionInfo(fill_price, abs(volume), commision, datetime)
             order.addExecutionInfo(orderExecutionInfo)
@@ -171,17 +170,17 @@ class LiveBroker(broker.Broker):
 
         else:
             logger.info("Trade %d refered to order %d that is not active" % (int(msg_dict['trade_id']), int(msg_dict['order_id'])))
-            
-                
+
+
     def _onOrderAction(self, msg_dict):
         order = self.__activeOrders.get(msg_dict['order_id'])
         if msg_dict['action'] == 'canceled':
             self._unregisterOrder(order)
             order.switchState(broker.Order.State.CANCELED)
-            
+
             # Notify that the order was canceled.
             self.notifyOrderEvent(broker.OrderEvent(order, broker.OrderEvent.Type.CANCELED, "User requested cancellation"))
-            
+
             # Update cash and shares.
             self.__api.qryAccount()
 
@@ -195,7 +194,7 @@ class LiveBroker(broker.Broker):
         #self.refreshOpenOrders()
         self.login()
         pass
-        
+
     def stop(self):
         self.__stop = True
         logger.info("Shutting down trade monitor.")
@@ -214,11 +213,11 @@ class LiveBroker(broker.Broker):
             if order.isSubmitted():
                 order.switchState(broker.Order.State.ACCEPTED)
                 self.notifyOrderEvent(broker.OrderEvent(order, broker.OrderEvent.Type.ACCEPTED, None))
-        
+
         # Dispatch events from the trade monitor.
         while self.__msg_queue.qsize() > 0:
             msg = self.__msg_queue.get(True, LiveBroker.QUEUE_TIMEOUT)
-            
+
             if msg['event_type'] == CTPTdApi.EventType.ON_TRADE:
                 self._onUserTrades(msg)
             elif msg['event_type'] == CTPTdApi.EventType.ON_QUERY_ACCOUNT:
@@ -230,44 +229,45 @@ class LiveBroker(broker.Broker):
             else:
                 pass
 
+
     def peekDateTime(self):
         # Return None since this is a realtime subject.
         return None
 
     # END observer.Subject interface
-    
+
     # BEGIN broker.Broker interface
-    
+
     def getShares(self, instrument_id):
         return self.__positions[instrument_id]
-    
+
 
     def getCash(self, includeShort=True):
         return self.__cash_available
-        
-        
+
+
     def getInstrument(self, instrument):
         return self.__positions.get(instrument, 0)
-        
+
 
     def getPositions(self):
         return self.__positions
-        
+
 
     def getActiveOrders(self, instrument=None):
         return self.__activeOrders.values()
-        
-        
+
+
     def getInstrumentTraits(self):
         return FutureTraits()
-        
+
 
     def submitOrder(self, order):
         if order.isInitial():
             # Override user settings based on Bitstamp limitations.
             order.setAllOrNone(False)
             order.setGoodTillCanceled(True)
-            
+
             order_ref = self.__api.sendOrder(order.getInstrument(), order.getAction(),\
                                      order.getLimitPrice(), int(order.getQuantity()))
             order.setSubmitted(order_ref, datetime.now())
@@ -278,26 +278,26 @@ class LiveBroker(broker.Broker):
             order.switchState(broker.Order.State.SUBMITTED)
         else:
             raise Exception("The order was already processed")
-            
+
 
     def createMarketOrder(self, action, instrument, quantity, onClose=False):
         raise Exception("Market orders are not supported")
-        
-        
+
+
     def createLimitOrder(self, action, instrument, limitPrice, quantity):
         instrumentTraits = self.getInstrumentTraits()
         limitPrice = round(limitPrice, 2)
         quantity = instrumentTraits.roundQuantity(quantity)
         return broker.LimitOrder(action, instrument, limitPrice, quantity, instrumentTraits)
-        
+
 
     def createStopOrder(self, action, instrument, stopPrice, quantity):
         raise Exception("Stop orders are not supported")
-        
+
 
     def createStopLimitOrder(self, action, instrument, stopPrice, limitPrice, quantity):
         raise Exception("Stop limit orders are not supported")
-        
+
 
     def cancelOrder(self, order):
         activeOrder = self.__activeOrders.get(order.getId())
@@ -305,44 +305,24 @@ class LiveBroker(broker.Broker):
             raise Exception("The order is not active anymore")
         if activeOrder.isFilled():
             raise Exception("Can't cancel order that has already been filled")
-        
-        
+
+
         self.__api.cancelOrder(order.getInstrument(), str(order.getId()))
-        
-        
+
+
     def queryPosition(self, order):
         self.__api.qryPosition()
-    
-    
+
+
     def queryAccount(self):
         self.__api.qryAccount()
-        
+
 
     # END broker.Broker interface
-    
-            
-            
+
+
+
 if __name__ == '__main__':
     pass
     #test_limit_order()
     #test_cancel_order()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

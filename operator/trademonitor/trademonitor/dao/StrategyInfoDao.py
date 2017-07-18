@@ -25,10 +25,10 @@ class StrategyInfoDao():
 
     def getStrategyByAccIDArray(self,accountidarray):
         return self.StrategyInfoDB.find({"account_id":{"$in":accountidarray}})
-    
+
     def deleteStrategyID(self,strategy_id):
         return self.StrategyInfoDB.remove({"strategy_id":strategy_id})
-    
+
     def updateStrategy(self,strategy_id,strategy):
         self.StrategyInfoDB.update({'strategy_id':strategy_id},{"$set":strategy},upsert = False)
 

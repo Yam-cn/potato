@@ -7,7 +7,7 @@ Created on Tue Nov 03 13:06:56 2015
 
 if __name__ == '__main__':
     import sys
-    sys.path.append("..")     
+    sys.path.append("..")
     from engine import bar
 # 以上模块仅测试用
 from engine.broker.fillstrategy import DefaultStrategy
@@ -28,11 +28,11 @@ class thrSMA(strategy.BacktestingStrategy):
         self.__malength2 = int(mid_l)
         self.__malength3 = int(long_l)
         self.__circ = int(up_cum)
-        
+
         self.__ma1 = ma.SMA(self.__prices, self.__malength1)
         self.__ma2 = ma.SMA(self.__prices, self.__malength2)
         self.__ma3 = ma.SMA(self.__prices, self.__malength3)
-        
+
     def getPrice(self):
         return self.__prices
 
@@ -51,7 +51,7 @@ class thrSMA(strategy.BacktestingStrategy):
 
     def onExitCanceled(self, position):
         self.__position.exitMarket()
-        
+
     def buyCon1(self):
         if cross.cross_above(self.__ma1, self.__ma2) > 0:
             return True
@@ -67,31 +67,31 @@ class thrSMA(strategy.BacktestingStrategy):
 
         if m1 >= self.__circ and m2 >= self.__circ:
             return True
-    
+
     def sellCon1(self):
         if cross.cross_below(self.__ma1, self.__ma2) > 0:
             return True
-            
+
 
     def onBars(self, bars):
         # If a position was not opened, check if we should enter a long position.
-        
+
         if self.__ma2[-1]is None:
-            return 
-            
+            return
+
         if self.__position is not None:
             if not self.__position.exitActive() and cross.cross_below(self.__ma1, self.__ma2) > 0:
                 self.__position.exitMarket()
                 #self.info("sell %s" % (bars.getDateTime()))
-        
+
         if self.__position is None:
             if self.buyCon1() and self.buyCon2():
                 shares = int(self.getBroker().getCash() * 0.2 / bars[self.__instrument].getPrice())
                 self.__position = self.enterLong(self.__instrument, shares)
                 print bars[self.__instrument].getDateTime(), bars[self.__instrument].getPrice()
                 #self.info("buy %s" % (bars.getDateTime()))
-    
-    
+
+
 def testStrategy():
     from engine import bar
 
@@ -103,8 +103,8 @@ def testStrategy():
     frequency = bar.Frequency.MINUTE
     paras = [2, 20, 60, 10]
     plot = True
-    
-    #############################################path set ############################33 
+
+    #############################################path set ############################33
     import os
     print os.path.split(os.path.realpath(__file__))
     if frequency == bar.Frequency.MINUTE:
@@ -112,23 +112,23 @@ def testStrategy():
     elif frequency == bar.Frequency.DAY:
         path = os.path.join(os.environ.get('STRATEGYPATH'), '..', 'histdata', 'day')
     filepath = os.path.join(path, instrument + market + ".csv")
-    
-    
-    #############################################don't change ############################33  
+
+
+    #############################################don't change ############################33
     from engine.barfeed.csvfeed import Feed
-    
+
     barfeed = Feed(frequency)
     barfeed.setDateTimeFormat('%Y-%m-%d %H:%M:%S')
     barfeed.loadBars(instrument, market, fromDate, toDate, filepath)
-    
+
     engine_id = instrument + '.' + market
     strat = strat(barfeed, engine_id, *paras)
-    
+
     from engine.stratanalyzer import returns
     from engine.stratanalyzer import sharpe
     from engine.stratanalyzer import drawdown
     from engine.stratanalyzer import trades
-    
+
     retAnalyzer = returns.Returns()
     strat.attachAnalyzer(retAnalyzer)
     sharpeRatioAnalyzer = sharpe.SharpeRatio()
@@ -162,35 +162,3 @@ def run_strategy(ticker, account_id, paras):
 
 if __name__ == "__main__":
     testStrategy()
-        
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

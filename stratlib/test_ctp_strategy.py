@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 """
 Created on Tue Nov 03 13:06:56 2015
-
 @author: Zhixiong Ge (james.ge@gmail.com)
 """
 from engine.barfeed.ctpfeed import CTPLiveFeed
@@ -14,15 +13,15 @@ class TestStrategy(strategy.BaseStrategy):
         strategy.BaseStrategy.__init__(self, feed, brk)
         self.__instruments = feed.getRegisteredInstruments()
         self.__position = {}
-        
+
         self.bar_count = 0
-        
-        
+
+
     def onEnterOk(self, position):
         print '___________________________________'
         print 'onEnterOK called'
-        
-        
+
+
     def onExitOk(self, position):
         print '___________________________________'
         print 'onExitOk called'
@@ -37,15 +36,15 @@ class TestStrategy(strategy.BaseStrategy):
     def onBars(self, bars):
         self.bar_count += 1
         # If a position was not opened, check if we should enter a long position.
-        
+
         print 'onBars called'
-        
+
         for ticker in self.__instruments:
             b = bars.getBar(ticker)
             if b:
                 print 'time', b.getDateTime(), 'open:',b.getOpen(),  'high:', b.getHigh(), ' low: ', b.getLow(), \
                     'close: ', b.getClose(), 'volume:', b.getVolume(), 'amount:', b.getAmount()
-                    
+
         print 'cash:{0}'.format(self.getBroker().getCash())
 
 
@@ -85,37 +84,9 @@ def run_strategy(ticker, account_id, paras):
 
 if __name__ == "__main__":
     ticker = 'ag1706'
-    
+
     feed = CTPLiveFeed([ticker], 10)
     brk = LiveBroker('052677')
-    
-    strat = TestStrategy(feed, brk)    
+
+    strat = TestStrategy(feed, brk)
     strat.run()
-    
-    
-
-
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
