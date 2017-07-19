@@ -27,8 +27,17 @@
 6. 运行potato
   * docker-compose yaml文件目录下运行docker-compose up -d
 
+### How to run strategy
+1. Mongodb配置CTP账户(potato.ctp_account{userid:"xxxx"，password:"xxxx"，brokerid:"xxxx"，address:"xxxx"，port:"xxxx“})
+  * 推荐下载mongodb客户端compass mongodb： https://www.mongodb.com/download-center?jmp=nav#community
+
+2. 主机stratlib目录存放策略文件
+
+3. 运行和监控策略：http://IP:8080
+
 ### How to debug
   * 查看运行日志：docker logs xxxx（container id）
+  * 查看后台任务运行状态：http://IP:5555
 
 ### TODO
   * 根据大家需要日志收集和展示采用ELK（ElasticSearch, Logstash, Kibana），便于日志管理
