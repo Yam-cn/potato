@@ -16,16 +16,11 @@ services:
         container_name: potato_suit
         hostname: potato_suit
         ports:
-            - 5555:5555
-            - 8088:8080
-            - 8888:8888
-            - 27017:27017
+            - 5555:5555   #celery-flower
+            - 8088:8080   #potato web
+            - 8888:8888   #notebook
+            - 27017:27017 #mongodb
         volumes:
             - /home/work/project/potato/notebook:/notebook
             - /home/work/project/potato/stratlib:/opt/stratlib
             - /data/mongodb:/var/lib/mongodb           
-        #logging:
-        #    driver: "gelf"
-        #    options:
-        #        gelf-address: "udp://118.178.135.152:12201"
-                #syslog-address: "tcp://118.178.135.152:5000"

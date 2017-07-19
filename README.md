@@ -1,41 +1,26 @@
-## Welcome to GitHub Pages
+## potato
 
-You can use the [editor on GitHub](https://github.com/Yam-cn/potato/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
+Potato is a pythonic algorithmic trading framework. It could be used for backtesting, paper trading and living trading.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+## Main Futures
 
-### Markdown
+* pyalgotrade-cn engine
+* Tushare living quotation
+* CTP living quotation
+* CTP live trading
+* Strategy management web
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
+## Installation
 
-```markdown
-Syntax highlighted code block
+Docker deployment is recommented. You can refer to readme in docker directory.
 
-# Header 1
-## Header 2
-### Header 3
+## Support or Contact
+For any suggestion, requirement, bugs , etc, please join in QQ group(300349971).
+Or you can aslo concern potato WeChat official account and raise your issue.
 
-- Bulleted
-- List
+![Alt text](/docker/potato.jpg "土豆工厂")
 
-1. Numbered
-2. List
 
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/Yam-cn/potato/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
-
-### Thanks
+## Thanks
 
 Many thanks Nokia security architect Kevin and CMBC front-end architect Chenhua for contribution.
