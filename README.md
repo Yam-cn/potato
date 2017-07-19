@@ -1,10 +1,10 @@
-## potato
+## Potato
 
 Potato is a pythonic algorithmic trading framework. It could be used for backtesting, paper trading and living trading.
 
 ## Main Futures
 
-* pyalgotrade-cn engine
+* Pyalgotrade-cn engine
 * Tushare living quotation
 * CTP living quotation
 * CTP live trading

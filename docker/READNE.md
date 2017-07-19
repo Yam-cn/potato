@@ -1,9 +1,9 @@
 ### How to build docker image
 1. base_os 目录下面的dockerfile主要是用来生成pyalgotrade-cn的基础镜像
-   * e.g docker build base_os:xx(版本信息) -f base_os/
+   * docker build base_os:xx(版本信息) -f base_os/
 
 2. 当前目录下dockefile主要是用来基于base_os的景象生产策略管理前端和后端的镜像
-   * e.g docker build potato:xx(版本信息) .
+   * docker build potato:xx(版本信息) .
 
 3. 当前考虑方便社区成员使用，所有代码生成一个镜像方便大家部署
 
