@@ -28,4 +28,4 @@ Many thanks Nokia security architect Kevin and CMBC front-end architect Chenhua 
 
 ## Contributing
 
-All contributions, improvements, enhancements, and ideas are welcome. Feel free to ask questions on the mailing list(316245420@qq.com or 56582881@qq.com)
+All contributions, improvements, enhancements, and ideas are welcome. Feel free to ask questions on the mailing list(idoquant@126.com).
