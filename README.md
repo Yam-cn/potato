@@ -5,10 +5,11 @@ Potato is a pythonic algorithmic trading framework. It could be used for backtes
 ## Main Futures
 
 * Pyalgotrade-cn engine
-* Tushare living quotation
-* CTP living quotation
+* Tushare live quote
+* CTP live quote
 * CTP live trading
-* Strategy management web
+* Strategy web-based control panel
+
 
 ## Installation
 
@@ -24,3 +25,7 @@ Or you can aslo concern potato WeChat official account and raise your issue.
 ## Thanks
 
 Many thanks Nokia security architect Kevin and CMBC front-end architect Chenhua for contribution.
+
+## Contributing
+
+All contributions, improvements, enhancements, and ideas are welcome. Feel free to ask questions on the mailing list(316245420@qq.com or 56582881@qq.com)
