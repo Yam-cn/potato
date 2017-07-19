@@ -8,11 +8,11 @@ services:
     #    image: base_os:0.2
     potato_suit:
         restart: always
-        build:
-            context: ./
-            dockerfile: Dockerfile
+        #build:
+        #    context: ./
+        #    dockerfile: Dockerfile
         #image: potato:0.8
-        image:registry.cn-hangzhou.aliyuncs.com/potato/potato:0.8
+        image: registry.cn-hangzhou.aliyuncs.com/potato/potato:0.8
         container_name: potato_suit
         hostname: potato_suit
         ports:
