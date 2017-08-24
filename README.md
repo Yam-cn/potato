@@ -24,7 +24,8 @@ Or you can aslo concern potato WeChat official account and raise your issue.
 
 ## Thanks
 
-Many thanks Nokia security architect Kevin and CMBC front-end architect Chenhua for contribution.
+* Many thanks to Nokia security architect Kevin and CMBC front-end architect Chenhua for contribution.
+* Many thanks to XueFu
 
 ## Contributing
 
